@@ -5,3 +5,6 @@ This is a lightweight exercise to set up Git. It complies with the following ste
 2. Commit test files to Git Repo 
 3. Folk a repo from a classmate
 4. Update and merge to this classmate's repo
+
+# Contributor
+Te, Du (td928): created dummy file update for my merge exercise
