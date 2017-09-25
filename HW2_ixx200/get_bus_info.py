@@ -7,6 +7,7 @@ import sys
 import json
 import urllib3
 import pprint
+import csv
 
 def setup(api_key, bus_line):
 
@@ -22,6 +23,8 @@ def setup(api_key, bus_line):
 	'''
 
 	return "http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=" + api_key + "&VehicleMonitoringDetailLevel=calls&LineRef=" + bus_line
+
+
 
 def callAPI(url):
 
@@ -49,6 +52,7 @@ def callAPI(url):
 	return r.data
 
 
+
 def parseData(bus_line, raw_data):
 
 	'''
@@ -69,20 +73,86 @@ def parseData(bus_line, raw_data):
 	print("Bus Line : " + bus_line)
 	print("Number of Active Buses : " + str(numBus))
 
-	for i in range(numBus):
-
-		latitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
-			['VehicleLocation']['Latitude']
-		longitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
-			['VehicleLocation']['Longitude']
-
-		print("Bus " + str(i+1) + " is at latitude " + str(latitude) + " and longitude " + str(longitude))
-
 	print ('==================================================')
 
 	return json_data
 
-def exportData(json_data):
+
+
+def extractStopData(json_data):
+	
+	'''
+	This function exports next stop info of each bus in the line of interest
+
+	Args:
+		json_data (json object): bus locaiton data in json format
+
+	Return: a array of dictionary including Bus ID, Latitude,Longitude,Stop Name,Stop Status
+
+	'''
+
+	stopData = []
+
+	numBus = len(json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'])
+
+	for i in range(numBus):
+
+		latitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+							['VehicleLocation']['Latitude']
+
+		longitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+							['VehicleLocation']['Longitude']
+
+		StopName = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+							['OnwardCalls']['OnwardCall'][0]['StopPointName']
+
+		StopStatus = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+							['OnwardCalls']['OnwardCall'][0]['Extensions']['Distances']['PresentableDistance']
+
+		print("Bus " + str(i+1) + " is at latitude " + str(latitude) + " and longitude " + str(longitude) + " at Stop : " + StopName + " (" + StopStatus + ")")
+
+		try: 
+
+			stopData.append({'Bus ID': i+1, 'Latitude': latitude, 'Longitude': longitude, 'Stop Name': StopName, 'Stop Status': StopStatus})
+
+		except:
+
+			stopData[0] = {'Bus ID': i+1, 'Latitude': latitude, 'Longitude': longitude, 'Stop Name': StopName, 'Stop Status': StopStatus}
+
+	print ('==================================================')
+
+	return stopData
+
+
+
+def export2CSV(stopData, file_name):
+
+	'''
+	This function exports the list of Stop Data of a bus line into CSV
+
+	Args:
+		stopData (array): a list of dictionary including Bus ID, Latitude, Longitude, Stop Name, Stop Status
+		file_name (str): user input file name
+
+	Return: None
+
+	'''
+	try:
+		keys = stopData[0].keys()
+
+		with open(file_name, 'w') as output_file:
+			dict_writer = csv.DictWriter(output_file, keys)
+			dict_writer.writeheader()
+			dict_writer.writerows(stopData)
+
+		print('Export Stop Data to CSV Successful.')
+
+	except:
+		e = sys.exc_info()
+		print('Export Stop Data to CSV Failed: ' + str(e))
+
+
+def exportRawData(json_data):
 
 	'''
 	This function exports bus location data to a file with the request timestamp
@@ -99,6 +169,7 @@ def exportData(json_data):
 		json.dump(json_data, outfile)
 
 
+
 def main():
 
 	'''
@@ -106,22 +177,26 @@ def main():
 
 	It takes in 2 parameters passed in by an user and stores in api_key and bus_line respectively. 
 
-	Expected user call: python show_bus_locations.py xxxxx-xxxxx-xxxxx-xxxxx-xxxxx B52
+	Expected user call: python show_bus_locations.py xxxxx-xxxxx-xxxxx-xxxxx-xxxxx B52 B52.csv
 
 	'''
-
 	try:
 		api_key = sys.argv[1]
 		bus_line = str(sys.argv[2]).upper()
+		file_name = sys.argv[3]
+
 		url = setup(api_key, bus_line)
 		raw_data = callAPI(url)
 		json_data = parseData(bus_line, raw_data)
-		exportData(json_data)
+		stopData = extractStopData(json_data)
+		export2CSV(stopData, file_name)
+		exportRawData(json_data)
 
 	except:
 		e = sys.exc_info()
 		print("Something went wrong: " + str(e))
 		sys.exit(1)
+
 
 if __name__ == "__main__":
 	main()
