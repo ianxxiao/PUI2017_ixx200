@@ -103,11 +103,18 @@ def extractStopData(json_data):
 		longitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
 							['VehicleLocation']['Longitude']
 
-		StopName = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
-							['OnwardCalls']['OnwardCall'][0]['StopPointName']
+		try:
 
-		StopStatus = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
-							['OnwardCalls']['OnwardCall'][0]['Extensions']['Distances']['PresentableDistance']
+			StopName = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+								['OnwardCalls']['OnwardCall'][0]['StopPointName']
+
+			StopStatus = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\
+								['OnwardCalls']['OnwardCall'][0]['Extensions']['Distances']['PresentableDistance']
+		
+		except: 
+			StopName = 'N/A'
+
+			StopStatus = 'N/A'	
 
 		print("Bus " + str(i+1) + " is at latitude " + str(latitude) + " and longitude " + str(longitude) + " at Stop : " + StopName + " (" + StopStatus + ")")
 
@@ -145,7 +152,7 @@ def export2CSV(stopData, file_name):
 			dict_writer.writeheader()
 			dict_writer.writerows(stopData)
 
-		print('Exported Stop Data to CSV Successful: ' + "./data/" + file_name)
+		print('Exported Stop Data to CSV Successful. Check the File at: ' + "./data/" + file_name)
 
 	except:
 		e = sys.exc_info()
@@ -195,6 +202,7 @@ def main():
 	except:
 		e = sys.exc_info()
 		print("Something went wrong: " + str(e))
+		print("Please confirm if you enter the correct bus line number.")
 		sys.exit(1)
 
 
