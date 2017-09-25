@@ -145,7 +145,7 @@ def export2CSV(stopData, file_name):
 			dict_writer.writeheader()
 			dict_writer.writerows(stopData)
 
-		print('Export Stop Data to CSV Successful.')
+		print('Exported Stop Data to CSV Successful: ' + "./data/" + file_name)
 
 	except:
 		e = sys.exc_info()
