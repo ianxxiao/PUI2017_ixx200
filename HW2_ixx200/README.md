@@ -18,4 +18,4 @@
 **HW2_A3.ipynb**
 - Assignment 3 iPython Notebook
 - data used resides in NYU CUSP Data Facility (not downloadable)
-- 311 data can be found at https://opendata.cityofnewyork.us/ 
+- original 311 data can be found at https://opendata.cityofnewyork.us/ 
