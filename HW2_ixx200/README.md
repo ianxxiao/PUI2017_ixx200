@@ -19,3 +19,7 @@
 - Assignment 3 iPython Notebook
 - data used resides in NYU CUSP Data Facility (not downloadable)
 - original 311 data can be found at https://opendata.cityofnewyork.us/ 
+
+**HW2_Bonus.ipynb**
+- Assignment 3 Bonus Solution using NYPD Motor Collision data
+- data used resides in NYU CUSP Data Facility (not downloadable)
