@@ -1,0 +1,281 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"dict",
+				"dict_writer"
+			],
+			[
+				"stop",
+				"stopData"
+			],
+			[
+				"out",
+				"output_file"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "show_bus_locations.py",
+			"settings":
+			{
+				"buffer_size": 3414,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "# PULL BUS DATA FROM METRO API\n# Return a list of bus information\n\nimport sys\nimport pandas as pd\nimport sys\nimport json\nimport urllib3\nimport pprint\nimport csv\n\ndef setup(api_key, bus_line):\n\n\t'''\n\tThis function creates a API URL based on user inputs\n\n\tArgs:\n\t\tapi_key (str): private API key the use received from MTA API service\n\t\tbus_line (str): a bus line of interest (i.e. b27)\n\n\tReturn: a full url including API request details, API Key, and Buse Line of Interest\n\n\t'''\n\n\treturn \"http://bustime.mta.info/api/siri/vehicle-monitoring.json?key=\" + api_key + \"&VehicleMonitoringDetailLevel=calls&LineRef=\" + bus_line\n\n\n\ndef callAPI(url):\n\n\t'''\n\tThis function triggers a url link for RESTful API Call\n\n\tArgs:\n\t\tulr (str): a full url link including API address, API Key, and Bus Line of interest\n\n\tReturn: \n\t\tr.data: raw json data receive from the API call\n\n\t'''\n\n\thttp = urllib3.PoolManager()\n\tr = http.request('GET', url)\n\t\n\tif r.status == 200:\n\t\tprint ('API Request Succeeded with Request Code: ' + str(r.status))\n\t\tprint ('==================================================')\n\telse:\n\t\tprint ('Check Again. Request Code: ' + str(r.status))\n\t\tprint ('==================================================')\n\n\treturn r.data\n\n\n\ndef parseData(bus_line, raw_data):\n\n\t'''\n\tThis function prints out key location information regarding a bus line at the request time; it also returns the data in a json format\n\n\tArgs:\n\t\tbus_line (str): bus line of interest provided by the user \n\t\traw_data (str): bus location data in plain text format received from API request\n\n\tReturn: bus location data in json format\n\n\t'''\n\n\tjson_data = json.loads(raw_data)\n\n\tnumBus = len(json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'])\n\n\tprint(\"Bus Line : \" + bus_line)\n\tprint(\"Number of Active Buses : \" + str(numBus))\n\n\tprint ('==================================================')\n\n\treturn json_data\n\n\n\ndef extractStopData(json_data):\n\t\n\t'''\n\tThis function exports next stop info of each bus in the line of interest\n\n\tArgs:\n\t\tjson_data (json object): bus locaiton data in json format\n\n\tReturn: a array of dictionary including Bus ID, Latitude,Longitude,Stop Name,Stop Status\n\n\t'''\n\n\tstopData = []\n\n\tnumBus = len(json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'])\n\n\tfor i in range(numBus):\n\n\t\tlatitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\\\n\t\t\t\t\t\t\t['VehicleLocation']['Latitude']\n\n\t\tlongitude = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\\\n\t\t\t\t\t\t\t['VehicleLocation']['Longitude']\n\n\t\ttry:\n\n\t\t\tStopName = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\\\n\t\t\t\t\t\t\t\t['OnwardCalls']['OnwardCall'][0]['StopPointName']\n\n\t\t\tStopStatus = json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['VehicleActivity'][i]['MonitoredVehicleJourney']\\\n\t\t\t\t\t\t\t\t['OnwardCalls']['OnwardCall'][0]['Extensions']['Distances']['PresentableDistance']\n\t\t\n\t\texcept: \n\t\t\tStopName = 'N/A'\n\n\t\t\tStopStatus = 'N/A'\t\n\n\t\tprint(\"Bus \" + str(i+1) + \" is at latitude \" + str(latitude) + \" and longitude \" + str(longitude) + \" at Stop : \" + StopName + \" (\" + StopStatus + \")\")\n\n\t\ttry: \n\n\t\t\tstopData.append({'Bus ID': i+1, 'Latitude': latitude, 'Longitude': longitude, 'Stop Name': StopName, 'Stop Status': StopStatus})\n\n\t\texcept:\n\n\t\t\tstopData[0] = {'Bus ID': i+1, 'Latitude': latitude, 'Longitude': longitude, 'Stop Name': StopName, 'Stop Status': StopStatus}\n\n\tprint ('==================================================')\n\n\treturn stopData\n\n\n\ndef export2CSV(stopData, file_name):\n\n\t'''\n\tThis function exports the list of Stop Data of a bus line into CSV\n\n\tArgs:\n\t\tstopData (array): a list of dictionary including Bus ID, Latitude, Longitude, Stop Name, Stop Status\n\t\tfile_name (str): user input file name\n\n\tReturn: None\n\n\t'''\n\ttry:\n\t\tkeys = stopData[0].keys()\n\n\t\twith open(file_name, 'w') as output_file:\n\t\t\tdict_writer = csv.DictWriter(output_file, keys)\n\t\t\tdict_writer.writeheader()\n\t\t\tdict_writer.writerows(stopData)\n\n\t\tprint('Exported Stop Data to CSV Successful. Check the File at: ' + \"./data/\" + file_name)\n\n\texcept:\n\t\te = sys.exc_info()\n\t\tprint('Export Stop Data to CSV Failed: ' + str(e))\n\n\ndef exportRawData(json_data):\n\n\t'''\n\tThis function exports bus location data to a file with the request timestamp\n\n\tArgs:\n\t\tjson_data (json object): bus locaiton data in json format\n\n\tReturn: None\n\n\t'''\n\t\n\tfileName = './data/bus_location_' + str(json_data['Siri']['ServiceDelivery']['VehicleMonitoringDelivery'][0]['ValidUntil'].split('.')[0]) + '.txt'\n\twith open(fileName, 'w') as outfile:\n\t\tjson.dump(json_data, outfile)\n\n\n\ndef main():\n\n\t'''\n\tThis is the main execution workflow of this script; it standardize user input and calls all sub-functions\n\n\tIt takes in 2 parameters passed in by an user and stores in api_key and bus_line respectively. \n\n\tExpected user call: python get_bus_info.py xxxxx-xxxxx-xxxxx-xxxxx-xxxxx B52 B52.csv\n\n\t'''\n\ttry:\n\t\tapi_key = sys.argv[1]\n\t\tbus_line = str(sys.argv[2]).upper()\n\t\tfile_name = sys.argv[3]\n\n\t\turl = setup(api_key, bus_line)\n\t\traw_data = callAPI(url)\n\t\tjson_data = parseData(bus_line, raw_data)\n\t\tstopData = extractStopData(json_data)\n\t\texport2CSV(stopData, file_name)\n\t\texportRawData(json_data)\n\n\texcept:\n\t\te = sys.exc_info()\n\t\tprint(\"Something went wrong: \" + str(e))\n\t\tprint(\"Please confirm if you enter the correct bus line number.\")\n\t\tsys.exit(1)\n\n\nif __name__ == \"__main__\":\n\tmain()",
+			"file": "get_bus_info.py",
+			"file_size": 5583,
+			"file_write_time": 131508366370000000,
+			"settings":
+			{
+				"buffer_size": 5577,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "Packages/Python/Python.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 89.0,
+		"last_filter": "package",
+		"selected_items":
+		[
+			[
+				"package",
+				"Install Package Control"
+			]
+		],
+		"width": 392.0
+	},
+	"console":
+	{
+		"height": 130.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/Ian/Dropbox/NYU_CUSP/Code/PUI2017_ixx200/HW2_ixx200/data/bus_location_2017-09-23T15:37:14.txt",
+		"/Users/Ian/Library/Application Support/Sublime Text 3/Packages/User/python36.sublime-build"
+	],
+	"find":
+	{
+		"height": 39.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "show_bus_locations.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3414,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3088,
+								3026
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 1107.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "get_bus_info.py",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5577,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5034,
+								5034
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2352.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 166.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/python36.sublime-build",
+	"project": "PUI_HW2.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
