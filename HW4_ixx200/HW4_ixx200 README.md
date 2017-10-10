@@ -1,7 +1,7 @@
 # Overview
 This is the submission for Homework 4. 
 
-# Literature Choices of Statistical Tests
+# Review of Statistical Tests in Literatures
 
 |Statistical Analyses | IV(s) | IV Type(s) | DV(s) | DV Type(s)| Control Var | Control Var Type | Question to be Answered | H0 | alpha | Link |
 |-----------------------|-------|------------|-------|-----------|-------------|------------------|-------------------------|----|-------|--------|
