@@ -4,5 +4,5 @@
 - A3: Investigate linear relationships between fire arm possession, homicides by fire arms, and mass shootings
 
 # Contributor
-- Te Du
-- Ben Steers
+- Te Du (provided answers for benchmark)
+- Ben Steers (provided answers for benchmark)
