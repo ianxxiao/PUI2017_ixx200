@@ -6,4 +6,4 @@ The data used in this assignment can be found:
 - Number of Unit in a Building [(link)](https://www1.nyc.gov/assets/planning/download/zip/data-maps/open-data/mn_mappluto_16v2.zip)
 
 # Contributor
-- NA
+- Te Du (Provided his answers for benchmark)
