@@ -1,5 +1,5 @@
 ### Overview
-This is the visualization homework for PUI class
+This is the visualization homework for PUI class. I try to provide interactive visual insights of building age, energy use, and building configuration using Local Law 84 from 2013-2016 and PLUTO datasets. 
 
 ### Visualization
 ![Alt text](./screenshot.png?raw=true)
