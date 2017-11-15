@@ -14,5 +14,8 @@ Please see the ipython notebook attached. It includes the following steps that g
 - modelling
 - export to CSV for uploading to Carto
 
+# Limitation
+There are 9,852 samples in my integrated dataset. Only 400 of these samples were render due to limited Carto credit for geo-fencing. Additional locationing from building address to lat/long was required.
+
 # Contributor
 - NA
