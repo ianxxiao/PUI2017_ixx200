@@ -4,7 +4,7 @@ I try to provide interactive visual insights of building age, energy use, and bu
 # Visualization
 ![Alt text](./screenshot.png?raw=true)
 
-**Caption**: this is a map of 400 NYC buildings from Local Law 84. It highlights areas with older buildings using color coding. Many older buildings scatter near Central Park, midtown Manhattan, and core areas in Bronx and Brooklyn. Additional information about energy consumption behaviour and building configuration can be found when hover over each sample. 
+**Caption**: this is a map of 400 NYC buildings from Local Law 84. It highlights areas with older buildings using color coding. Many older buildings scatter near Central Park, midtown Manhattan, and core areas in Bronx, Queens, and Brooklyn. Additional information about energy consumption behaviour and building configuration can be found when hover over each sample. 
 
 Link to the Interactive Visualization on Carto
 
