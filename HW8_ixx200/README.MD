@@ -35,7 +35,7 @@ interactive map the quantities being visualized ambiguous?
 & Water Performance Map](https://serv.cusp.nyu.edu/projects/evt/). The red color map selected is a good and reasonable choice when representing building age data, the continious legend is a good choice as well and honesty represents the data.
 
 ***Appendix A:***<br>
-![alt text](Screen Shot 2017-11-19 at 19.54.54.png)
+![alt text](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2019.54.54.png)
 
 ***Appendix B:***<br>
-![alt text](Screen Shot 2017-11-19 at 18.47.51.png)
+![alt text](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2018.47.51.png)
