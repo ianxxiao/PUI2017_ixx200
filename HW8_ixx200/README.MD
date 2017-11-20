@@ -22,3 +22,20 @@ Please see the ipython notebook attached. It includes the following steps that g
 
 # Contributor
 - NA
+
+-----
+
+# Dana's Comments for Ian's plot, HW9:
+
+Overall, the plot is esthetic and the colors are clear and accessible also to blind-color people. The plot has no title, which would have been helpful to better understand it. Few more thoughts of how to improve the plot:
+- **Clarity:** The frame with the explenation of what does the map say is somewhat problematic; First, it bothers the map, in the static + interactive view (and when openning the link in small chrome window it overlaps the data observed - see [appendix A](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2019.54.54.png)). Then, it is misleading - the **graphics** do not contain all the information that is reported, it is only delivered to the viewer as plain text. The graphics itself only tell us about the **age** of the buiilding.<br>
+In this sense, it could have been better to write this information in the caption.
+interactive map the quantities being visualized ambiguous?
+- **Esthetic:** The plot is esthetic and clear. Though, using _dots_ as the graphic elements conects in my head to incidents / observations and not to a geographical entity such as buildings. It could have been better to color the lots of the buildings in the dataset, as in [appendix B](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2018.47.51.png)(screenshot was taken from [New York City Energy 
+& Water Performance Map](https://serv.cusp.nyu.edu/projects/evt/). The red color map selected is a good and reasonable choice when representing building age data, the continious legend is a good choice as well and honesty represents the data.
+
+***Appendix A:***
+[overlapping](Screen Shot 2017-11-19 at 19.54.54.png)
+
+***Appendix B:***
+[lots](Screen Shot 2017-11-19 at 18.47.51.png)
