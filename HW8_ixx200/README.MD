@@ -34,8 +34,8 @@ interactive map the quantities being visualized ambiguous?
 - **Esthetic:** The plot is esthetic and clear. Though, using _dots_ as the graphic elements conects in my head to incidents / observations and not to a geographical entity such as buildings. It could have been better to color the lots of the buildings in the dataset, as in [appendix B](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2018.47.51.png) (screenshot was taken from [New York City Energy 
 & Water Performance Map](https://serv.cusp.nyu.edu/projects/evt/). The red color map selected is a good and reasonable choice when representing building age data, the continious legend is a good choice as well and honesty represents the data.
 
-***Appendix A:***<br>
+### Appendix A: overlapping text frame
 ![alt text](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2019.54.54.png)
 
-***Appendix B:***<br>
+### Appendix B: Refference to lot-colored map
 ![alt text](https://github.com/danachermesh/PUI2017_dcr346/blob/master/HW9_dcr346/Screen%20Shot%202017-11-19%20at%2018.47.51.png)
