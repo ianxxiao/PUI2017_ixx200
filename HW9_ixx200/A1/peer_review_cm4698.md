@@ -25,3 +25,9 @@ This view may avoid the perception of "projecting" when scatter plot and regress
 
 # Honesty
 Charlie's data processing approach is reasonable and maintain the data integrity of the dataset. He removed States with zero popoulation, which may be due to data availability. This is sufficient to support the regression analysis Charlie intended to perform.  
+
+# FBB ok
+Charlies plot in addition to your bar proposal offest the info that the percentage is consistent at very different pop size. 
+I would recommand adding the fit equation to justify the "80%" in the caption and to give info on the assumptions made in the intercept (y @ x=0)
+
+10/10
