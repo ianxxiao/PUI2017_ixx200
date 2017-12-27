@@ -6,4 +6,4 @@ This is a Repo for Principle of Urban Ingelligent at NYU CUSP 2017. Each script 
 - Core Machine Learning Algorithms, such as Linear Regression, K-Means Clustering, etc.
 
 # Project 
-This git also included a project based on personal interest. My project is to understand bike rebalancing operation and travel patterns using CitiBike (NYC Bike Sharing service) data.
+This repo also included a project based on personal interest. My project is to understand bike rebalancing operation and travel patterns using CitiBike (NYC Bike Sharing service) data.
